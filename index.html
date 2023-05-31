@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Temperature Graph</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.css">
+  
+</head>
+
+<body>
+  <div class="container">
+    <h1>Temperature Graph</h1>
+    <canvas id="temperatureChart"></canvas>
+    <div class="legend">
+      <div class="legend-item">
+        <span style="background-color: rgba(75, 192, 192, 1)"></span>
+        <span>Temperature</span>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
+  <script>
+    const ctx = document.getElementById('temperatureChart').getContext('2d');
+    const temperatureData = [25, 26, 24, 23, 22, 21, 20]; // Example temperature data
+
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+        datasets: [{
+          label: 'Temperature',
+          data: temperatureData,
+          backgroundColor: 'rgba(75, 192, 192, 0.2)',
+          borderColor: 'rgba(75, 192, 192, 1)',
+          borderWidth: 2,
+          pointRadius: 5,
+          pointBackgroundColor: 'rgba(75, 192, 192, 1)',
+          pointBorderColor: '#fff',
+          pointHoverRadius: 7,
+          pointHoverBackgroundColor: 'rgba(75, 192, 192, 1)',
+          pointHoverBorderColor: '#fff'
+        }]
+      },
+      options: {
+        scales: {
+          yAxes: [{
+            ticks: {
+              beginAtZero: true
+            }
+          }]
+        },
+        legend: {
+          display: false
+        },
+        tooltips: {
+          mode: 'index',
+          intersect: false
+        }
+      }
+    });
+  </script>
+</body>
+
+</html>
