@@ -1,44 +1,90 @@
+* {
+  box-sizing: border-box;
+}
+
 body {
   font-family: Arial, sans-serif;
-  background-color: #f3f3f3; /* Set the background color of the body */
+  background-color: #f9f9f9;
   margin: 0;
   padding: 0;
 }
 
 .container {
   max-width: 800px;
-  margin: 0 auto; /* Center the container horizontally */
+  margin: 0 auto;
   padding: 20px;
-  background-color: #fff; /* Set the background color of the container */
-  border-radius: 10px; /* Add rounded corners to the container */
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Add a subtle box shadow to the container */
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 h1 {
-  text-align: center; /* Center the heading text */
-  color: #333; /* Set the color of the heading text */
-  margin-bottom: 20px; /* Add some bottom margin to the heading */
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
 }
 
 canvas {
-  max-width: 100%; /* Make the canvas responsive and fit its container */
+  display: block;
+  width: 100%;
+  max-height: 300px;
+  height: auto;
 }
 
-.legend {
-  display: flex; /* Display the legend items in a row */
-  justify-content: center; /* Center the legend items horizontally */
-  margin-top: 20px; /* Add some top margin to the legend */
+.statistics {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
 }
 
-.legend-item {
-  display: flex; /* Display the legend item content in a row */
-  align-items: center; /* Center the legend item content vertically */
-  margin-right: 20px; /* Add some right margin between legend items */
+.stat-item {
+  text-align: center;
 }
 
-.legend-item span {
-  display: inline-block; /* Make the legend item color box an inline element */
-  width: 12px; /* Set the width of the legend item color box */
-  height: 12px; /* Set the height of the legend item color box */
-  margin-right: 5px; /* Add some right margin between the color box and the label */
+.stat-label {
+  font-weight: bold;
+  color: #777;
+  margin-bottom: 5px;
+}
+
+.stat-value {
+  font-size: 24px;
+  color: #333;
+}
+
+.alert {
+  padding: 15px;
+  margin-top: 20px;
+  border-radius: 5px;
+  color: #fff;
+  font-weight: bold;
+}
+
+.alert-danger {
+  background-color: #ff4d4f;
+}
+
+.alert-warning {
+  background-color: #ffac38;
+}
+
+.goal-section {
+  margin-top: 40px;
+  padding: 20px;
+  background-color: #f5f5f5;
+  border-radius: 10px;
+}
+
+.goal-title {
+  text-align: center;
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.goal-content {
+  font-size: 16px;
+  color: #555;
+  line-height: 1.6;
 }
