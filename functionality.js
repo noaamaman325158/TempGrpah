@@ -1,94 +1,113 @@
-// Request Bluetooth device
-async function requestBluetoothDevice() {
-  try {
-    const device = await navigator.bluetooth.requestDevice({
-      filters: [{
-        services: ['The uuid of this device'] // Specify the UUID of the desired Bluetooth device
-      }]
-    });
-    return device;
-  } catch (error) {
-    console.error('Error requesting Bluetooth device:', error);
-  }
-}
-
-// Connect to Bluetooth device
-async function connectBluetoothDevice(device) {
-  try {
-    const server = await device.gatt.connect();
-    const service = await server.getPrimaryService('The uuid of this device'); // Specify the UUID of the desired service
-    const characteristic = await service.getCharacteristic('your_characteristic_uuid'); // Specify the UUID of the desired characteristic
-    characteristic.addEventListener('characteristicvaluechanged', handleTemperatureChange);
-    await characteristic.startNotifications();
-  } catch (error) {
-    console.error('Error connecting to Bluetooth device:', error);
-    showDefaultGraph();
-  }
-}
-
-// Handle temperature change event
-function handleTemperatureChange(event) {
-  const temperatureValue = event.target.value.getFloat32(0, true);
-  // Process temperature value, update chart, etc.
-}
-
-// Default graph
-
-// Default temperature data
-const defaultTemperatureData = [25, 26, 24, 23, 22, 21, 20];
-
-// Show default graph
-function showDefaultGraph() {
-  temperatureChart.data.labels = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-  temperatureChart.data.datasets[0].data = defaultTemperatureData;
-  temperatureChart.update();
-}
-
-// Temperature chart
-
-// Initialize chart
 const ctx = document.getElementById('temperatureChart').getContext('2d');
-const temperatureData = []; // Array to store temperature values
+    const temperatureData = []; // Empty array to store temperature data
 
-const temperatureChart = new Chart(ctx, {
-  type: 'line',
-  data: {
-    labels: [],
-    datasets: [{
-      label: 'Temperature',
-      data: temperatureData,
-      backgroundColor: 'rgba(75, 192, 192, 0.2)',
-      borderColor: 'rgba(75, 192, 192, 1)',
-      borderWidth: 2,
-      pointRadius: 5,
-      pointBackgroundColor: 'rgba(75, 192, 192, 1)',
-      pointBorderColor: '#fff',
-      pointHoverRadius: 7,
-      pointHoverBackgroundColor: 'rgba(75, 192, 192, 1)',
-      pointHoverBorderColor: '#fff'
-    }]
-  },
-  options: {
-    scales: {
-      yAxes: [{
-        ticks: {
-          beginAtZero: true
+    const temperatureChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: [],
+        datasets: [{
+          label: 'Temperature',
+          data: temperatureData,
+          backgroundColor: 'rgba(75, 192, 192, 0.2)',
+          borderColor: 'rgba(75, 192, 192, 1)',
+          borderWidth: 2,
+          pointRadius: 5,
+          pointBackgroundColor: 'rgba(75, 192, 192, 1)',
+          pointBorderColor: '#fff',
+          pointHoverRadius: 7,
+          pointHoverBackgroundColor: 'rgba(75, 192, 192, 1)',
+          pointHoverBorderColor: '#fff'
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          yAxes: [{
+            ticks: {
+              beginAtZero: true,
+              fontColor: '#777'
+            },
+            gridLines: {
+              color: '#ddd'
+            }
+          }],
+          xAxes: [{
+            ticks: {
+              fontColor: '#777'
+            },
+            gridLines: {
+              color: '#ddd'
+            }
+          }]
+        },
+        legend: {
+          display: false
+        },
+        tooltips: {
+          mode: 'index',
+          intersect: false
         }
-      }]
+      }
+    });
+
+    function updateStatistics() {
+      const avgTemperature = calculateAverage(temperatureData);
+      const maxTemperature = Math.max(...temperatureData);
+      const minTemperature = Math.min(...temperatureData);
+
+      document.getElementById('avgTemperature').textContent = avgTemperature.toFixed(2);
+      document.getElementById('maxTemperature').textContent = maxTemperature.toFixed(2);
+      document.getElementById('minTemperature').textContent = minTemperature.toFixed(2);
     }
-  }
-});
 
-// Start Bluetooth functionality
-async function startBluetoothFunctionality() {
-  try {
-    const device = await requestBluetoothDevice();
-    await connectBluetoothDevice(device);
-  } catch (error) {
-    console.error('Error starting Bluetooth functionality:', error);
-    showDefaultGraph();
-  }
-}
+    function calculateAverage(data) {
+      if (data.length === 0) {
+        return 0;
+      }
 
-// Start Bluetooth functionality when the page loads
-document.addEventListener('DOMContentLoaded', startBluetoothFunctionality);
+      const sum = data.reduce((acc, curr) => acc + curr, 0);
+      return sum / data.length;
+    }
+
+    function simulateDataUpdate() {
+      const temperatureValue = Math.random() * 10 + 20; // Generate a random temperature between 20 and 30
+      temperatureData.push(temperatureValue);
+      temperatureChart.data.labels.push(new Date().toLocaleTimeString());
+
+      if (temperatureData.length > 10) {
+        temperatureData.shift(); // Remove the oldest data point if the array exceeds 10 elements
+        temperatureChart.data.labels.shift();
+      }
+
+      if (temperatureValue <= 22) {
+        temperatureChart.data.datasets[0].pointBackgroundColor = 'rgba(255, 0, 0, 1)';
+        temperatureChart.data.datasets[0].pointHoverBackgroundColor = 'rgba(255, 0, 0, 1)';
+      } else if (temperatureValue >= 28) {
+        temperatureChart.data.datasets[0].pointBackgroundColor = 'rgba(255, 165, 0, 1)';
+        temperatureChart.data.datasets[0].pointHoverBackgroundColor = 'rgba(255, 165, 0, 1)';
+      } else {
+        temperatureChart.data.datasets[0].pointBackgroundColor = 'rgba(75, 192, 192, 1)';
+        temperatureChart.data.datasets[0].pointHoverBackgroundColor = 'rgba(75, 192, 192, 1)';
+      }
+
+      temperatureChart.update();
+      updateStatistics();
+
+      if (temperatureValue > 25) {
+        displayAlert('High Temperature Alert!', 'The temperature has exceeded 25 degrees.', 'warning');
+      }
+    }
+
+    function displayAlert(title, text, type) {
+      const alertContainer = document.getElementById('alertContainer');
+      const alert = document.createElement('div');
+      alert.className = `alert alert-${type}`;
+      alert.textContent = title + ' ' + text;
+      alertContainer.appendChild(alert);
+      setTimeout(() => {
+        alert.remove();
+      }, 3000);
+    }
+
+    setInterval(simulateDataUpdate, 2000);
